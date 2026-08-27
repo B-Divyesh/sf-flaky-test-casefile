@@ -1,5 +1,34 @@
 # Flaky Test Casefile v0.1.0 handoff
 
+## Independent verification 2 — PASS (2026-08-27)
+
+**PASS — candidate `6c381a47a18aa60cb099c5c32b60b4f99d0e608d` is verified
+release-ready.** Production at
+`https://flaky-test-casefile.sociobot.in/` matches the exact candidate build
+byte-for-byte for all deployable pages and assets. Independent verification
+found no open defects.
+
+- Fresh `npm ci`, unit suite (5 files / 8 tests), TypeScript check, exact
+  production build, seeded Playwright retry report, built-site security/offline
+  E2E suite, package dry-run/pack, clean ESM+CJS consumer install, and
+  production audit all passed. The E2E test intentionally shows 503 then 200
+  and is correctly reported as flaky.
+- The candidate implements the brief's core job: retry grouping/noise
+  normalization, optional first network/DOM divergence, static report,
+  header/query redaction, default trace/video exclusion, and baked PNG masking.
+- Desktop 1440px and mobile 390px local/live checks passed: keyboard visible
+  skip-link focus, normal/boundary/malformed/recovery viewer flows, hostile
+  JSON treated as literal text, reduced motion, no overflow/errors/outbound
+  third-party requests, and zero axe serious/critical findings.
+- Service-worker install/update request/offline reload passed. Live headers
+  include same-origin CSP, frame blocking, permissions policy, HSTS/nosniff,
+  and immutable caching for fingerprinted assets. Mobile Lighthouse: 100
+  performance, 100 accessibility, 96 best practices, 100 SEO; LCP 1.1 s,
+  CLS 0.
+
+See `.factory/verification-2.md` for commands, exact evidence, scope, and the
+Lighthouse shutdown caveat. No product source was changed by this verifier.
+
 ## What shipped
 
 - Publish-ready TypeScript npm package with ESM, CommonJS, and declaration outputs.
