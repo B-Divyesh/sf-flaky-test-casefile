@@ -15,8 +15,9 @@ function casefileServiceWorker(): Plugin {
         '/casefile-drafting.webp',
         '/fonts/space-grotesk-latin.woff2',
       ]);
-      for (const filename of Object.keys(bundle)) {
-        if (filename !== 'sw.js') precache.add(`/${filename}`);
+      for (const [filename, output] of Object.entries(bundle)) {
+        const isMainEntry = output.type === 'chunk' && output.code.includes('serviceWorker.register("/sw.js")');
+        if (filename.endsWith('.css') || isMainEntry) precache.add(`/${filename}`);
       }
       const assets = JSON.stringify([...precache].sort());
       this.emitFile({
