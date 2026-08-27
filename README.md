@@ -82,6 +82,7 @@ Mask coordinates are CSS pixels in the screenshot. For PNGs, masking changes the
 ```sh
 npm install
 npm test
+npm run test:e2e # requires a Playwright Chromium install
 npm run build
 npm pack --dry-run
 ```

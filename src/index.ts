@@ -1,5 +1,6 @@
 import { mkdir, readFile, writeFile, copyFile } from 'node:fs/promises';
 import { basename, extname, resolve } from 'node:path';
+import { homedir } from 'node:os';
 import type { FullConfig, FullResult, Reporter, Suite, TestCase, TestResult } from '@playwright/test/reporter';
 import { clusterAttempts, firstDivergence } from './normalize.js';
 import { maskPng } from './png-mask.js';
@@ -103,7 +104,7 @@ export default class CasefileReporter implements Reporter {
   printsToStdio(): boolean { return false; }
 
   private redactText(value: string): string {
-    let output = value;
+    let output = value.replaceAll(process.cwd(), '<workspace>').replaceAll(homedir(), '<home>');
     for (const name of this.options.redactHeaders) output = output.replace(new RegExp(`(${name.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')}\\s*[:=]\\s*)([^\\s,;]+)`, 'gi'), '$1[REDACTED]');
     return output.replace(/([?&](?:token|access_token|api_key|signature)=)[^&#\s]+/gi, '$1[REDACTED]');
   }

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://flaky-test-casefile.sociobot.in/sitemap.xml

@@ -3,5 +3,7 @@ dist/
 casefile-report/
 playwright-report/
 test-results/
+.artifacts/
 *.tgz
 .DS_Store
+graphify-out/

@@ -31,7 +31,7 @@ The only entrance is a 240ms upward reveal, like tracing paper settling on a pla
 
 ## Asset plan and provenance
 
-- `site/public/casefile-drafting.webp`: original generated hero illustration, a top-down technical casefile with retry strips converging on one fault pin. Generated for this product with the factory `factory-image` deployment on 2026-08-27, then converted locally to WebP. Prompt sidecar is retained next to the source during production and the final prompt is recorded below. No third-party visual assets.
+- `site/public/casefile-drafting.webp` and its responsive 640px derivative: original generated hero illustration, a top-down technical casefile with retry strips converging on one fault pin. Generated for this product with the factory `factory-image` deployment on 2026-08-27, then converted locally to WebP. The generation sidecar accompanied the PNG source during production; the source was discarded after visual review and the durable final prompt is recorded below. No third-party visual assets.
 - CSS grid, dimension marks, icons, and the product monogram are hand-authored in CSS/SVG so they remain sharp and accessible.
 - Space Grotesk is redistributed under the SIL Open Font License; its license is kept with the font asset.
 
