@@ -124,3 +124,17 @@ npm pack
   `staticwebapp.config.json` must remain at that deployment root.
 - The package is ready for the factory registry workflow; do not publish from
   this worker. Use `npm pack` to generate the registry handoff tarball.
+
+## Final production deployment
+
+- Deployed `dist/site` to the existing **Standard Azure Static Web Apps**
+  production target `sf-flaky-test-casefile` on 2026-08-27.
+- Live SHA-256 parity passed for the three HTML pages, worker, hashed JS/CSS,
+  both WebP files, and the self-hosted font.
+- Live headers now include the same-origin CSP with `frame-ancestors 'none'`,
+  permissions policy, and immutable one-year cache control for fingerprinted
+  JS/CSS. The live worker precache names only files present in the deployment.
+- On the public origin at mobile width, the verifier's exact uploaded XSS
+  payload created zero image elements and did not execute; the activated worker
+  then completed an offline viewer reload. The desktop/mobile/axe audit again
+  passed for the home, privacy, and terms pages.
