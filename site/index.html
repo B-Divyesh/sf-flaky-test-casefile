@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A local-first Playwright reporter that clusters retry failures and pinpoints the first network or DOM divergence.">
+    <meta name="theme-color" content="#071b2b">
+    <title>Flaky Test Casefile — Compare Playwright retries</title>
+    <link rel="preload" href="/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/casefile-drafting.webp" as="image" type="image/webp" fetchpriority="high">
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Flaky Test Casefile home"><span aria-hidden="true">FC</span><span>Flaky Test<br>Casefile</span></a>
+      <nav aria-label="Primary navigation">
+        <a href="#demo">Inspect demo</a><a href="#install">Install</a><a href="https://github.com/B-Divyesh/sf-flaky-test-casefile">GitHub</a>
+      </nav>
+    </header>
+    <main id="main">
+      <section class="hero ruler-frame">
+        <div class="hero-copy">
+          <p class="kicker">Playwright reporter / local evidence</p>
+          <h1>Find the first thing that changed.</h1>
+          <p class="lede">Casefile turns intermittent retries into compact failure signatures—then marks the earliest network or DOM divergence. No upload. No AI guesses. Just comparable evidence.</p>
+          <div class="hero-actions"><a class="button" href="#install">Install the reporter</a><a class="text-link" href="#demo">Open a sample casefile <span aria-hidden="true">↓</span></a></div>
+          <ul class="signal-list" aria-label="Product benefits"><li><strong>01</strong> Normalize timing noise</li><li><strong>02</strong> Cluster matching symptoms</li><li><strong>03</strong> Export one static file</li></ul>
+        </div>
+        <figure class="hero-figure">
+          <img src="/casefile-drafting.webp" width="1200" height="800" alt="Three Playwright retry evidence strips converging on one red fault marker on a blueprint drafting sheet" fetchpriority="high">
+          <figcaption><span>PLATE 01</span> Retry evidence converges on the first divergence.</figcaption>
+        </figure>
+      </section>
+
+      <section class="workflow" aria-labelledby="workflow-heading">
+        <div class="section-mark" aria-hidden="true">A—C</div>
+        <div><p class="kicker">One pass through the evidence</p><h2 id="workflow-heading">From rerun pile to diagnosis</h2></div>
+        <ol class="workflow-grid">
+          <li><span>A</span><h3>Collect attempts</h3><p>The reporter uses Playwright’s documented callbacks and keeps artifacts on disk.</p></li>
+          <li><span>B</span><h3>Match symptoms</h3><p>Volatile ports, IDs, timestamps, line numbers, and retry durations stop splitting the same failure.</p></li>
+          <li><span>C</span><h3>Mark divergence</h3><p>An optional page probe finds the first changed request, response, console error, or DOM landmark.</p></li>
+        </ol>
+      </section>
+
+      <section id="demo" class="demo-section" aria-labelledby="demo-heading">
+        <div class="demo-intro">
+          <p class="kicker">Working field viewer</p><h2 id="demo-heading">Inspect a real casefile shape</h2>
+          <p>This sample contains three attempts of a seeded checkout test. Load a local <code>casefile.json</code> to inspect yours; the file never leaves this browser.</p>
+          <label class="file-button" for="casefile-input">Open casefile JSON</label><input id="casefile-input" type="file" accept="application/json,.json"><button class="plain-button" id="restore-sample" type="button">Restore sample</button>
+          <p id="file-status" class="file-status" role="status">Showing the built-in sample.</p>
+        </div>
+        <div class="casefile-panel" aria-live="polite">
+          <div class="casefile-head"><div><span>CASE / <b id="case-id">FC-7K2M9Q</b></span><h3 id="case-title">Checkout submit waits forever</h3></div><div class="stamp">FLAKY<br><small>2 / 3 attempts</small></div></div>
+          <div class="attempt-ruler" id="attempt-ruler" aria-label="Attempt outcomes"></div>
+          <div class="divergence-card"><p class="label">First divergence / event <span id="event-number">07</span></p><div class="compare"><div><span>Baseline</span><strong id="baseline-event">200 · POST /api/payment</strong></div><div class="fault-event"><span>Failed retry</span><strong id="failed-event">503 · POST /api/payment</strong></div></div></div>
+          <div class="evidence-foot"><span id="symptom">NETWORK</span><span id="occurrences">2 OCCURRENCES</span><span>HEADERS REDACTED</span></div>
+        </div>
+      </section>
+
+      <section id="install" class="install" aria-labelledby="install-heading">
+        <div><p class="kicker">Two-minute setup</p><h2 id="install-heading">A reporter, not another platform.</h2><p>Add one reporter entry. The result is a portable report your CI can retain like any other artifact.</p></div>
+        <div class="code-sheet"><div class="code-top"><span>playwright.config.ts</span><button id="copy-code" type="button">Copy</button></div><pre><code id="install-code">reporter: [
+  ['line'],
+  ['flaky-test-casefile', {
+    outputDir: 'casefile-report'
+  }]
+]</code></pre><p id="copy-status" class="visually-hidden" role="status"></p></div>
+      </section>
+
+      <section class="privacy-strip" aria-labelledby="privacy-heading"><span class="shield" aria-hidden="true">×</span><div><h2 id="privacy-heading">Evidence stays on your runner.</h2><p>No telemetry or account. Traces and videos are excluded by default. Credential headers are redacted, and configured masks are baked into exported PNG pixels.</p></div><a href="/privacy/">Read privacy details</a></section>
+    </main>
+    <footer><div class="brand"><span aria-hidden="true">FC</span><span>Flaky Test<br>Casefile</span></div><p>Open-source under MIT. Built for evidence, not surveillance.</p><nav aria-label="Legal"><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></nav></footer>
+    <script type="module" src="/main.ts"></script>
+  </body>
+</html>

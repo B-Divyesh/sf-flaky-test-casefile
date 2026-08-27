@@ -1,6 +1,7 @@
 node_modules/
 dist/
-.env
-*.log
-graphify-out/
+casefile-report/
+playwright-report/
+test-results/
+*.tgz
 .DS_Store
