@@ -1,0 +1,11 @@
+{
+  "slug": "flaky-test-casefile",
+  "title": "Flaky Test Casefile",
+  "territory": "devtools-data",
+  "user": "Teams using Playwright in CI who need to turn intermittent failures into compact, comparable evidence instead of a pile of reruns and screenshots.",
+  "smallest_useful_product": "Playwright reporter that packages retries, normalizes timing noise, clusters matching failures, and renders a static casefile.",
+  "success_measure": "For a seeded flaky test, the reporter clusters 80%+ of failures into the right signature and shortens first diagnosis time by 30% versus raw artifacts.",
+  "artifact_class": "library-npm",
+  "monetization": "free",
+  "constraints": "Artifacts may include credentials/PII; offer request-header and screenshot masking; work from documented Playwright report APIs."
+}
