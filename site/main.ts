@@ -5,6 +5,15 @@ const sample: DemoData = { id: 'FC-7K2M9Q', title: 'Checkout submit waits foreve
 const byId = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 const eventLabel = (event?: { status?: number; method?: string; url?: string }) => event ? [event.status, event.method, event.url].filter((value) => value !== undefined).join(' · ') : 'No matching event';
 
+function attemptBlock(attempt: { retry: number; status: string; durationMs: number }) {
+  const block = document.createElement('div');
+  block.className = `attempt-block${attempt.status === 'passed' ? ' passed' : ''}`;
+  const retry = document.createElement('strong');
+  retry.textContent = `Retry ${attempt.retry}`;
+  block.append(retry, document.createTextNode(`${attempt.status} / ${attempt.durationMs} ms`));
+  return block;
+}
+
 function render(value: DemoData) {
   byId('case-id').textContent = value.id ?? 'UNCLUSTERED';
   byId('case-title').textContent = value.title ?? 'Untitled test';
@@ -13,7 +22,7 @@ function render(value: DemoData) {
   byId('event-number').textContent = String((value.divergence?.index ?? 0) + 1).padStart(2, '0');
   byId('baseline-event').textContent = eventLabel(value.divergence?.expected);
   byId('failed-event').textContent = eventLabel(value.divergence?.actual);
-  byId('attempt-ruler').innerHTML = (value.attempts ?? []).map((attempt) => `<div class="attempt-block ${attempt.status === 'passed' ? 'passed' : ''}"><strong>Retry ${attempt.retry}</strong>${attempt.status} / ${attempt.durationMs} ms</div>`).join('');
+  byId('attempt-ruler').replaceChildren(...(value.attempts ?? []).map(attemptBlock));
 }
 
 function firstCluster(json: any): DemoData {
@@ -37,4 +46,5 @@ byId('copy-code').addEventListener('click', async () => {
   catch { byId('copy-status').textContent = 'Clipboard access was blocked. Select and copy the configuration manually.'; }
 });
 render(sample);
-if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('/sw.js').catch(() => undefined);
+const canRegisterServiceWorker = location.protocol === 'https:' || ['localhost', '127.0.0.1'].includes(location.hostname);
+if ('serviceWorker' in navigator && canRegisterServiceWorker) navigator.serviceWorker.register('/sw.js').catch(() => undefined);

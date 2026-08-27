@@ -72,3 +72,55 @@ Then use the JSON payload in `.factory/verification.md` with the live or local
 viewer and observe its `onerror` handler run. On the live site, verify
 `/style.css` returns 404 and reload after setting the browser offline; it fails
 with `net::ERR_INTERNET_DISCONNECTED`.
+
+---
+
+# Release-blocker repair — ready to deploy (2026-08-27)
+
+## Repaired findings
+
+- The public local-casefile viewer now creates attempt elements with DOM APIs
+  and assigns every parsed value with `textContent`; it no longer interpolates
+  parsed casefile values into HTML. The verifier's exact `<img onerror>` payload
+  is an automated browser regression and remains visible only as literal text.
+- The service worker is emitted by Vite after fingerprinted asset names are
+  known. Its precache contains the generated `/assets/main-*.js` and
+  `/assets/style-*.css` entries, never the obsolete `/style.css`; it uses a new
+  cache version, waits for installation, takes control, and serves cached
+  navigation while offline.
+- `staticwebapp.config.json` keeps the docs deployment on Azure Static Web Apps
+  and adds a restrictive same-origin CSP, frame protection, nosniff,
+  referrer/permissions policies, and long-lived immutable caching for hashed
+  assets, self-hosted fonts, and immutable WebP artwork.
+
+## Verification from a clean install
+
+```sh
+npm ci
+npm run typecheck
+npm test
+npm run build
+npm run test:e2e   # Chromium installed with: npx playwright install chromium
+npm pack --dry-run
+npm pack
+```
+
+- Unit tests: 5 files / 8 tests passed, including the Azure header/cache
+  configuration regression.
+- E2E: the original seeded retry still fails once with HTTP 503 and passes with
+  HTTP 200 on retry; its generated artifact remains exactly 2 attempts and 1
+  cluster. The separate built-site suite passed the XSS regression and first
+  install/offline-reload worker regression.
+- Browser audit against the production build passed at desktop 1440px and
+  mobile 390px for `/`, `/privacy/`, and `/terms/`: title/lang/one-h1/main/alt,
+  no overflow, no console/page errors, and zero axe serious/critical findings.
+- `npm pack` produced a 14.3 KB compressed / 64.4 KB unpacked tarball. A clean
+  temporary consumer installed it and loaded the documented ESM and CommonJS
+  reporter/probe exports.
+
+## Deployment and publishing
+
+- Deploy `dist/site` as the Azure Static Web Apps artifact. The included
+  `staticwebapp.config.json` must remain at that deployment root.
+- The package is ready for the factory registry workflow; do not publish from
+  this worker. Use `npm pack` to generate the registry handoff tarball.
