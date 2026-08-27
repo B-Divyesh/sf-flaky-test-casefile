@@ -42,3 +42,33 @@ Verification completed on 2026-08-27:
 ## Asset provenance
 
 The original hero was generated with `/opt/fleet/lib/gen-image.sh` using the `factory-image` deployment, visually reviewed, converted to optimized 1200px and 640px WebP variants (79 KB and 24 KB), and saved at `site/public/casefile-drafting*.webp`. The complete production prompt and visual tokens are recorded in `.factory/design.md`. Space Grotesk is self-hosted under the SIL Open Font License at `site/public/fonts/OFL.txt`.
+
+---
+
+# Independent verification update — FAIL (2026-08-27)
+
+Candidate verified: `6a179aaa2d724d19cc753d7fcde19a5dbe1bf0a1`.
+Production verified: `https://flaky-test-casefile.sociobot.in/`.
+
+**FAIL — do not release this candidate unchanged.** The reporter package and
+seeded retry workflow pass, but the public local-casefile viewer has a
+reproducible DOM XSS when an uploaded JSON contains HTML in an attempt status.
+It executes script in the production origin. Separately, the service worker
+precaches `/style.css`, which is 404 in production because the actual Vite
+asset is hashed under `/assets/`; the worker never activates and an offline
+reload fails. See `.factory/verification.md` for the exact payload, commands,
+all passing evidence, deployment byte-for-byte parity, and lower-severity
+caching/header findings.
+
+How to reproduce the release blockers:
+
+```sh
+npm ci
+npm run build
+npm run test:e2e # after: npx playwright install chromium
+```
+
+Then use the JSON payload in `.factory/verification.md` with the live or local
+viewer and observe its `onerror` handler run. On the live site, verify
+`/style.css` returns 404 and reload after setting the browser offline; it fails
+with `net::ERR_INTERNET_DISCONNECTED`.
