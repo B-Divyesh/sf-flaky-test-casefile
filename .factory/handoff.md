@@ -2,7 +2,7 @@
 
 ## Result
 
-Repair complete. The product turns intermittent Playwright retries into a local static casefile for teams diagnosing flaky CI failures. The deployed documentation site now has the required sample sandbox, claim inventory, first-screen language, route structure, and clean audit command.
+Post-repair independent verification is **FAIL** at documentation SHA `95f30db`, with two low-severity presentation/accessibility findings and zero untested claims. The product paths, demo sandbox, privacy behavior, library package, and all declared claims passed. The remaining repairs are to make two mobile link targets at least 44×44px and remove the decorative landing label `PLATE 01`. See `.factory/verification-3.md` for the complete evidence and exact disposition of earlier findings.
 
 ## SHA record and deployment
 
