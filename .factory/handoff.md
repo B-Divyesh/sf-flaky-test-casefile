@@ -1,5 +1,20 @@
 # Flaky Test Casefile v0.1.0 handoff
 
+## Review 1 — FAIL (2026-09-05)
+
+**FAIL — 5 findings and 18 untested public claims. Do not treat the prior
+implementation verification PASS as a current release pass.** Review 1 checked
+implementation candidate `f0c13bf789f547c16fb3e96455ccb37eaab3e903`; the
+documentation checkout is `57e9f4be233edb5afe7f6dab62d6b459c935aed1`.
+
+The prior XSS, worker/offline, caching, and response-policy findings remain
+fixed and were rechecked live. The current blocker is product contract work:
+there is no required `/demo` sandbox, persistent demo label/reset, or
+`.factory/claims.json`; the live first screen/metadata/404 do not meet the
+plain-words and site-structure contract; and `npm run audit:site` cannot run
+from the documented clean setup. See `.factory/review-1.md` for evidence,
+commands, exact public claims, and required repairs.
+
 ## Independent verification 2 — PASS (2026-08-27)
 
 **PASS — candidate `6c381a47a18aa60cb099c5c32b60b4f99d0e608d` is verified
