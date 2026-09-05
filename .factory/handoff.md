@@ -1,184 +1,69 @@
 # Flaky Test Casefile v0.1.0 handoff
 
-## Review 1 — FAIL (2026-09-05)
+## Result
 
-**FAIL — 5 findings and 18 untested public claims. Do not treat the prior
-implementation verification PASS as a current release pass.** Review 1 checked
-implementation candidate `f0c13bf789f547c16fb3e96455ccb37eaab3e903`; the
-documentation checkout is `57e9f4be233edb5afe7f6dab62d6b459c935aed1`.
+Repair complete. The product turns intermittent Playwright retries into a local static casefile for teams diagnosing flaky CI failures. The deployed documentation site now has the required sample sandbox, claim inventory, first-screen language, route structure, and clean audit command.
 
-The prior XSS, worker/offline, caching, and response-policy findings remain
-fixed and were rechecked live. The current blocker is product contract work:
-there is no required `/demo` sandbox, persistent demo label/reset, or
-`.factory/claims.json`; the live first screen/metadata/404 do not meet the
-plain-words and site-structure contract; and `npm run audit:site` cannot run
-from the documented clean setup. See `.factory/review-1.md` for evidence,
-commands, exact public claims, and required repairs.
+## SHA record and deployment
 
-## Independent verification 2 — PASS (2026-08-27)
+- **Implementation SHA / deployed artifact:** `18e9d3e31f02905e0eb1453d7343c1971ee5b9c5` (`fix: add demo sandbox and verified claims`).
+- **Prior documentation/review SHA:** `8e1a58eb020e71000b15d4191cc87799a5524942`. This handoff is a later documentation-only update.
+- **Production:** deployed `dist/site` to the existing `sf-flaky-test-casefile` Static Web App on 2026-09-05. No backend, environment, replica, or storage configuration was changed.
+- **Live parity:** `https://flaky-test-casefile.sociobot.in/demo/` exactly matched `dist/site/demo/index.html` by SHA-256 after deployment.
 
-**PASS — candidate `6c381a47a18aa60cb099c5c32b60b4f99d0e608d` is verified
-release-ready.** Production at
-`https://flaky-test-casefile.sociobot.in/` matches the exact candidate build
-byte-for-byte for all deployable pages and assets. Independent verification
-found no open defects.
+## What changed
 
-- Fresh `npm ci`, unit suite (5 files / 8 tests), TypeScript check, exact
-  production build, seeded Playwright retry report, built-site security/offline
-  E2E suite, package dry-run/pack, clean ESM+CJS consumer install, and
-  production audit all passed. The E2E test intentionally shows 503 then 200
-  and is correctly reported as flaky.
-- The candidate implements the brief's core job: retry grouping/noise
-  normalization, optional first network/DOM divergence, static report,
-  header/query redaction, default trace/video exclusion, and baked PNG masking.
-- Desktop 1440px and mobile 390px local/live checks passed: keyboard visible
-  skip-link focus, normal/boundary/malformed/recovery viewer flows, hostile
-  JSON treated as literal text, reduced motion, no overflow/errors/outbound
-  third-party requests, and zero axe serious/critical findings.
-- Service-worker install/update request/offline reload passed. Live headers
-  include same-origin CSP, frame blocking, permissions policy, HSTS/nosniff,
-  and immutable caching for fingerprinted assets. Mobile Lighthouse: 100
-  performance, 100 accessibility, 96 best practices, 100 SEO; LCP 1.1 s,
-  CLS 0.
+- Added the direct [`/demo/`](https://flaky-test-casefile.sociobot.in/demo/) sandbox. It opens a seeded checkout failure with three attempts and a `200 → 503` payment divergence. Its persistent banner says **Demo — sample data, nothing is saved**; **Reset demo** restores the sample; **Start for real** clears demo state and returns to the normal viewer.
+- Demo browser state is isolated to `demo:flaky-test-casefile:`. Selected JSON files are only read in memory. `.factory/demo.md` documents the route, sample, reset, and namespace.
+- Added `.factory/claims.json` with 20 public claims. Each has one `@claim:<id>` Playwright test and an independently runnable command. The tests assert outcomes, including real reporter output, masking pixels, request privacy, demo reset/exit, and offline reload.
+- Rewrote the landing first screen: the job is named directly, the audience is explicit, and **Try it with sample data** states what it loads. The first screen has privacy, offline, and price facts. `.factory/copy-audit.md` records its word counts and terminology.
+- Added product-specific `/demo/` and `404.html` pages, complete metadata, canonical/OG/Twitter tags, favicon, 180px touch icon, 1200×630 derived social image, sitemap entry, consistent navigation/footer, and an Azure response override for a styled HTTP 404.
+- Updated the service-worker precache for all new public routes/assets and bumped its cache version. Existing XSS-safe DOM rendering, secure headers, immutable hashed-asset caching, and offline reload behavior remain intact.
+- Repaired `npm run audit:site`: it builds and serves a production preview itself unless `CASEFILE_AUDIT_URL` is set, checks all five routes at desktop and phone widths, fails for console/page errors, and uses Axe.
+- Pinned Playwright to `1.58.2`, removed the conflicting `esbuild` override, and added a clean ESM/CommonJS consumer-import check.
 
-See `.factory/verification-2.md` for commands, exact evidence, scope, and the
-Lighthouse shutdown caveat. No product source was changed by this verifier.
-
-## What shipped
-
-- Publish-ready TypeScript npm package with ESM, CommonJS, and declaration outputs.
-- Playwright reporter using documented reporter callbacks. It collects retry attempts, normalizes volatile timing/ID/port/source-location noise, clusters similar failures, and writes a self-contained `index.html` plus machine-readable `casefile.json`.
-- Optional `createCasefileProbe(page)` helper that records requests, responses, warning/error console messages, page errors, and labeled DOM landmark snapshots. Reports compare retries and identify the first stable event divergence.
-- Privacy controls: common credential header and sensitive query-string redaction, workspace/home path removal, traces/videos excluded by default, and pixel-baked rectangular masking for 8-bit RGB/RGBA PNG screenshots. Unsupported screenshot formats are omitted when masks are requested.
-- Responsive blueprint drafting-sheet documentation site with an in-browser local JSON viewer, loading/error/empty messaging, privacy and terms pages, offline service worker, self-hosted font, robots/sitemap files, and original generated hero artwork.
-
-## Run and verify
+## Verification from a clean checkout
 
 ```sh
-npm install
-npm test
+npm ci
+npx playwright install chromium
 npm run typecheck
+npm test
 npm run build
-npm run test:e2e # after installing Playwright Chromium
+npm run test:e2e
+npm run test:claims
+npm run audit:site
+npm run test:consumer
 npm pack --dry-run
+npm audit --omit=dev --audit-level=high
 ```
 
-The deploy root is `dist/site`; `dist/site/index.html` is present. Publishing is intentionally not performed by the worker. Registry handoff command: `npm pack` (verified tarball: 14 KB compressed, 64 KB unpacked).
+All commands passed on Node 22.23.2.
 
-Verification completed on 2026-08-27:
+- `npm test`: 5 files, 8 tests passed.
+- `npm run typecheck` and `npm run build`: passed. The site output contains the npm library formats and `dist/site` with the landing, demo, legal, and 404 pages.
+- `npm run test:e2e`: passed. The seeded Playwright run intentionally records a first `503` attempt and succeeds with `200` on retry, so Playwright reports the test as **flaky**, not failed. The viewer XSS and worker/offline regressions passed.
+- `npm run test:claims`: 20/20 passed. Every one of the 20 commands in `.factory/claims.json` was also run independently; each selected one passing tagged test from a fresh browser context.
+- `npm run audit:site`: passed locally and against production. Desktop 1440×960 and phone 390×844 checks cover `/`, `/demo/`, `/privacy/`, `/terms/`, and `/404.html`: one h1/main, titles, canonical/social metadata, no missing image alt, no overflow, no console errors, and zero Axe serious/critical violations.
+- `npm run test:consumer`: passed from a temporary clean consumer: ESM and CommonJS root imports and the `/probe` subpath all loaded.
+- `npm pack --dry-run`: passed (14.5 kB package, 65.2 kB unpacked). `npm audit --omit=dev --audit-level=high`: 0 vulnerabilities.
 
-- Unit/integration: 4 files, 7 tests passed.
-- Real Playwright seeded flake: failed once and passed on retry; generated casefile reported 1 cluster and correctly marked the response divergence `200 → 503`; configured screenshot mask was baked into the copied PNG.
-- Strict TypeScript: passed.
-- `npm audit`: 0 vulnerabilities.
-- Chromium checks at 390px and desktop on `/`, `/privacy/`, and `/terms/`: no console errors, horizontal overflow, missing alt text, or serious/critical axe findings; title/lang/main/one-h1 checks passed.
-- Generated casefile checked from `file://` at 390px: filters rendered, one cluster rendered, no console errors/overflow, zero serious/critical axe findings.
-- Lighthouse mobile: Performance 100, Accessibility 100, Best Practices 100, SEO 100; FCP 0.9s, LCP 1.2s, CLS 0, total blocking time 0ms.
-- First-load assets: 3.3 KB JS, 10.4 KB CSS, 22.4 KB font, 24.4 KB mobile hero WebP (all uncompressed and within budget).
+## Live verification
+
+- Fresh desktop and phone browser contexts started at scroll position 0 and showed: **Turn Playwright retries into evidence**; the Playwright-team audience sentence; and **Try it with sample data**. The action opened the seeded three-attempt casefile, showed the demo banner, reset correctly, and removed its `demo:` key when leaving.
+- The normal demo flow made same-origin requests only and produced no console errors. A new context installed the service worker, reloaded `/demo/` while offline, and retained the demo banner/sample.
+- `/`, `/demo/`, `/privacy/`, and `/terms/` returned 200. An unknown path returned HTTP 404 with **Page not found — Flaky Test Casefile** and a way home.
+- Live hashed JavaScript/CSS and the social image return `Cache-Control: public, max-age=31536000, immutable`. The live document response includes the same-origin CSP with `frame-ancestors 'none'`, HSTS, `nosniff`, referrer policy, and permissions policy.
+- Mobile Lighthouse against production recorded Performance 100, Accessibility 100, Best Practices 100, and SEO 100; FCP 0.9 s, LCP 1.2 s, CLS 0, TBT 0 ms. Lighthouse wrote its JSON before reporting a Chrome tab crash during BFCache/full-page-screenshot shutdown; the browser audit and direct Playwright checks are the pass/fail evidence.
+
+## Performance and assets
+
+- First-load JavaScript: 1.86 kB gzip. CSS: 3.38 kB gzip. Self-hosted Space Grotesk: 22.4 kB. The 640px hero image is 24.4 kB. All are within static-product budgets.
+- `casefile-og.webp` is a 1200×630 WebP crop derived from the original generated casefile drafting illustration. The new favicon is hand-authored SVG; its 180px touch icon is a local raster derivative. Provenance for the hero remains in `.factory/design.md`.
 
 ## Known gaps and next steps
 
-- Network/DOM divergence needs the optional probe attachment; the standard Playwright reporter API alone does not expose those event streams.
-- Pixel masking intentionally supports Playwright's usual non-interlaced 8-bit RGB/RGBA PNG screenshots. Other image formats are safely excluded when masks are configured.
-- Trace contents are not parsed or sanitized. They are excluded by default and should only be enabled for a controlled artifact store.
-- Clustering uses deterministic normalization and token similarity rather than learned guesses. Teams with domain-specific volatile values may eventually benefit from configurable normalization patterns.
-
-## Asset provenance
-
-The original hero was generated with `/opt/fleet/lib/gen-image.sh` using the `factory-image` deployment, visually reviewed, converted to optimized 1200px and 640px WebP variants (79 KB and 24 KB), and saved at `site/public/casefile-drafting*.webp`. The complete production prompt and visual tokens are recorded in `.factory/design.md`. Space Grotesk is self-hosted under the SIL Open Font License at `site/public/fonts/OFL.txt`.
-
----
-
-# Independent verification update — FAIL (2026-08-27)
-
-Candidate verified: `6a179aaa2d724d19cc753d7fcde19a5dbe1bf0a1`.
-Production verified: `https://flaky-test-casefile.sociobot.in/`.
-
-**FAIL — do not release this candidate unchanged.** The reporter package and
-seeded retry workflow pass, but the public local-casefile viewer has a
-reproducible DOM XSS when an uploaded JSON contains HTML in an attempt status.
-It executes script in the production origin. Separately, the service worker
-precaches `/style.css`, which is 404 in production because the actual Vite
-asset is hashed under `/assets/`; the worker never activates and an offline
-reload fails. See `.factory/verification.md` for the exact payload, commands,
-all passing evidence, deployment byte-for-byte parity, and lower-severity
-caching/header findings.
-
-How to reproduce the release blockers:
-
-```sh
-npm ci
-npm run build
-npm run test:e2e # after: npx playwright install chromium
-```
-
-Then use the JSON payload in `.factory/verification.md` with the live or local
-viewer and observe its `onerror` handler run. On the live site, verify
-`/style.css` returns 404 and reload after setting the browser offline; it fails
-with `net::ERR_INTERNET_DISCONNECTED`.
-
----
-
-# Release-blocker repair — ready to deploy (2026-08-27)
-
-## Repaired findings
-
-- The public local-casefile viewer now creates attempt elements with DOM APIs
-  and assigns every parsed value with `textContent`; it no longer interpolates
-  parsed casefile values into HTML. The verifier's exact `<img onerror>` payload
-  is an automated browser regression and remains visible only as literal text.
-- The service worker is emitted by Vite after fingerprinted asset names are
-  known. Its precache contains the generated `/assets/main-*.js` and
-  `/assets/style-*.css` entries, never the obsolete `/style.css`; it uses a new
-  cache version, waits for installation, takes control, and serves cached
-  navigation while offline.
-- `staticwebapp.config.json` keeps the docs deployment on Azure Static Web Apps
-  and adds a restrictive same-origin CSP, frame protection, nosniff,
-  referrer/permissions policies, and long-lived immutable caching for hashed
-  assets, self-hosted fonts, and immutable WebP artwork.
-
-## Verification from a clean install
-
-```sh
-npm ci
-npm run typecheck
-npm test
-npm run build
-npm run test:e2e   # Chromium installed with: npx playwright install chromium
-npm pack --dry-run
-npm pack
-```
-
-- Unit tests: 5 files / 8 tests passed, including the Azure header/cache
-  configuration regression.
-- E2E: the original seeded retry still fails once with HTTP 503 and passes with
-  HTTP 200 on retry; its generated artifact remains exactly 2 attempts and 1
-  cluster. The separate built-site suite passed the XSS regression and first
-  install/offline-reload worker regression.
-- Browser audit against the production build passed at desktop 1440px and
-  mobile 390px for `/`, `/privacy/`, and `/terms/`: title/lang/one-h1/main/alt,
-  no overflow, no console/page errors, and zero axe serious/critical findings.
-- `npm pack` produced a 14.3 KB compressed / 64.4 KB unpacked tarball. A clean
-  temporary consumer installed it and loaded the documented ESM and CommonJS
-  reporter/probe exports.
-
-## Deployment and publishing
-
-- Deploy `dist/site` as the Azure Static Web Apps artifact. The included
-  `staticwebapp.config.json` must remain at that deployment root.
-- The package is ready for the factory registry workflow; do not publish from
-  this worker. Use `npm pack` to generate the registry handoff tarball.
-
-## Final production deployment
-
-- Deployed `dist/site` to the existing **Standard Azure Static Web Apps**
-  production target `sf-flaky-test-casefile` on 2026-08-27.
-- Live SHA-256 parity passed for the three HTML pages, worker, hashed JS/CSS,
-  both WebP files, and the self-hosted font.
-- Live headers now include the same-origin CSP with `frame-ancestors 'none'`,
-  permissions policy, and immutable one-year cache control for fingerprinted
-  JS/CSS. The live worker precache names only files present in the deployment.
-- On the public origin at mobile width, the verifier's exact uploaded XSS
-  payload created zero image elements and did not execute; the activated worker
-  then completed an offline viewer reload. The desktop/mobile/axe audit again
-  passed for the home, privacy, and terms pages.
+- The optional probe must be attached by a test to compare network/DOM event streams; the standard Playwright reporter callback API does not expose them itself.
+- Pixel masking supports non-interlaced 8-bit RGB/RGBA PNG screenshots. Other formats are safely excluded when masks are configured.
+- Traces are excluded by default and are not parsed or sanitized. Enable trace inclusion only for a controlled artifact store.
+- The factory owns npm publishing. The ready-to-publish handoff command is `npm pack`; do not publish from this checkout.
