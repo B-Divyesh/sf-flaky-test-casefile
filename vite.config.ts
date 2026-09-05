@@ -9,10 +9,15 @@ function casefileServiceWorker(): Plugin {
     generateBundle(_, bundle) {
       const precache = new Set([
         '/',
+        '/demo/',
         '/privacy/',
         '/terms/',
+        '/404.html',
         '/casefile-drafting-640.webp',
         '/casefile-drafting.webp',
+        '/casefile-og.webp',
+        '/favicon.svg',
+        '/apple-touch-icon.png',
         '/fonts/space-grotesk-latin.woff2',
       ]);
       for (const [filename, output] of Object.entries(bundle)) {
@@ -23,7 +28,7 @@ function casefileServiceWorker(): Plugin {
       this.emitFile({
         type: 'asset',
         fileName: 'sw.js',
-        source: `const CACHE='casefile-site-v3';
+        source: `const CACHE='casefile-site-v4';
 const ASSETS=${assets};
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting())));
 self.addEventListener('activate', event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())));
@@ -52,8 +57,10 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(process.cwd(), 'site/index.html'),
+        demo: resolve(process.cwd(), 'site/demo/index.html'),
         privacy: resolve(process.cwd(), 'site/privacy/index.html'),
         terms: resolve(process.cwd(), 'site/terms/index.html'),
+        notFound: resolve(process.cwd(), 'site/404.html'),
       },
     },
   },

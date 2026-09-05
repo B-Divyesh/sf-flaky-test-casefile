@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Try a seeded Playwright retry casefile without saving data.">
+    <meta name="theme-color" content="#071b2b">
+    <meta property="og:title" content="Demo — Flaky Test Casefile">
+    <meta property="og:description" content="Try a seeded Playwright retry casefile without saving data.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://flaky-test-casefile.sociobot.in/demo/">
+    <meta property="og:image" content="https://flaky-test-casefile.sociobot.in/casefile-og.webp">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Demo — Flaky Test Casefile">
+    <meta name="twitter:description" content="Try a seeded Playwright retry casefile without saving data.">
+    <meta name="twitter:image" content="https://flaky-test-casefile.sociobot.in/casefile-og.webp">
+    <link rel="canonical" href="https://flaky-test-casefile.sociobot.in/demo/">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <title>Demo — Flaky Test Casefile</title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body data-demo="true">
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header class="site-header">
+      <a class="brand" href="/"><span aria-hidden="true">FC</span><span>Flaky Test<br>Casefile</span></a>
+      <nav aria-label="Primary navigation"><a href="/demo/" aria-current="page">Demo</a><a href="/#install">Install</a><a href="/privacy/">Privacy</a></nav>
+    </header>
+    <main id="main" class="demo-page">
+      <aside class="demo-banner" aria-label="Demo status"><strong>Demo — sample data, nothing is saved</strong><span>This demo uses only the <code>demo:</code> browser storage namespace.</span><div><button class="plain-button" id="reset-demo" type="button">Reset demo</button><a class="button small-button" id="start-real" href="/">Start for real</a></div></aside>
+      <section class="demo-workspace" aria-labelledby="demo-heading">
+        <div class="demo-intro">
+          <p class="kicker">Sample casefile</p><h1 id="demo-heading">Compare sample Playwright retries</h1>
+          <p>This seeded checkout failure has three attempts and one changed payment response.</p>
+          <label class="file-button" for="casefile-input">Open casefile JSON</label><input id="casefile-input" type="file" accept="application/json,.json">
+          <p id="file-status" class="file-status" role="status">Showing the seeded checkout casefile.</p>
+        </div>
+        <div class="casefile-panel" aria-live="polite">
+          <div class="casefile-head"><div><span>CASE / <b id="case-id">FC-7K2M9Q</b></span><h2 id="case-title">Checkout submit waits forever</h2></div><div class="stamp">FLAKY<br><small>2 / 3 attempts</small></div></div>
+          <div class="attempt-ruler" id="attempt-ruler" aria-label="Attempt outcomes"></div>
+          <div class="divergence-card"><p class="label">First divergence / event <span id="event-number">07</span></p><div class="compare"><div><span>Baseline</span><strong id="baseline-event">200 · POST /api/payment</strong></div><div class="fault-event"><span>Failed retry</span><strong id="failed-event">503 · POST /api/payment</strong></div></div></div>
+          <div class="evidence-foot"><span id="symptom">NETWORK</span><span id="occurrences">2 OCCURRENCES</span><span>HEADERS REDACTED</span></div>
+        </div>
+      </section>
+      <section class="install demo-install" aria-labelledby="install-heading">
+        <div><p class="kicker">Start for real</p><h2 id="install-heading">Add the reporter to Playwright</h2><p>Return to the documentation for installation and package use.</p></div>
+        <div class="code-sheet"><div class="code-top"><span>playwright.config.ts</span><button id="copy-code" type="button">Copy</button></div><pre><code id="install-code">reporter: [
+  ['line'],
+  ['flaky-test-casefile', {
+    outputDir: 'casefile-report'
+  }]
+]</code></pre><p id="copy-status" class="visually-hidden" role="status"></p></div>
+      </section>
+    </main>
+    <footer><div class="brand"><span aria-hidden="true">FC</span><span>Flaky Test<br>Casefile</span></div><p>Private static casefiles for Playwright retry evidence.</p><nav aria-label="Footer"><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></nav><small>Built by Param Factory<br>v0.1.0 · build repair-2</small></footer>
+    <script type="module" src="/main.ts"></script>
+  </body>
+</html>

@@ -1,8 +1,8 @@
 # Flaky Test Casefile
 
-Turn Playwright retries into one private, static incident report. The reporter groups matching failures, removes timing and identifier noise, compares optional network/DOM probe events, redacts headers, and exports masked screenshots without a server or account.
+Turn Playwright retries into evidence. This free MIT-licensed reporter is for teams comparing flaky CI failures and finding the first changed network or page event.
 
-Built for teams diagnosing intermittent CI failures. It complements Playwright's trace viewer; it does not run tests, upload artifacts, or guess at fixes.
+Try the one-click sample at [flaky-test-casefile.sociobot.in/demo/](https://flaky-test-casefile.sociobot.in/demo/). It opens a seeded checkout failure in an isolated `demo:` browser-storage namespace. **Reset demo** restores the sample. **Start for real** discards demo storage and returns to the documentation.
 
 ## Install
 
@@ -10,11 +10,11 @@ Built for teams diagnosing intermittent CI failures. It complements Playwright's
 npm install --save-dev flaky-test-casefile
 ```
 
-Requires Node 20+ and Playwright 1.40+.
+Node 20+ and Playwright 1.40+ are required.
 
-## Use the reporter
+## Add the reporter
 
-Add the reporter to `playwright.config.ts`:
+Add it to `playwright.config.ts`:
 
 ```ts
 import { defineConfig } from '@playwright/test';
@@ -30,13 +30,11 @@ export default defineConfig({
 });
 ```
 
-Run the suite, then open `casefile-report/index.html`. The report is self-contained and works offline. `casefile.json` is also emitted for automation.
+Run the suite, then open `casefile-report/index.html`. The reporter also writes `casefile.json` for automation. The HTML report is self-contained and opens from a local file while offline.
 
-By default screenshots are copied, common credential headers are replaced with `[REDACTED]`, and traces/videos are not copied because they may contain credentials or personal data. Set `includeTraces: true` only for a controlled artifact store.
+## Compare a network or page event
 
-## Pinpoint a network or DOM divergence
-
-The optional probe uses ordinary Playwright page events. Attach its result once per attempt:
+Attach optional probe evidence once per attempt:
 
 ```ts
 import { test } from '@playwright/test';
@@ -60,7 +58,13 @@ test('checkout survives a retry', async ({ page }, testInfo) => {
 });
 ```
 
-The casefile compares ordered events between retries and identifies the first differing request, response, console error, page error, or DOM landmark snapshot. Request headers are redacted before they enter the attachment.
+The casefile groups matching failures after normalizing timing and identifier noise. It reports the first changed request, response, console error, page error, or DOM landmark when probe evidence is attached.
+
+## Privacy defaults
+
+The reporter needs no account, upload, server, or cloud service. It redacts common credential headers and sensitive query values from probe evidence. Traces and videos are excluded by default. Configured masks alter copied PNG screenshot pixels.
+
+The documentation site uses no telemetry, cookies, third-party fonts, third-party scripts, or runtime CDN. The local JSON viewer processes a selected file in browser memory and does not save or upload it. The public site caches its files after the first visit for offline reloads.
 
 ## Options
 
@@ -75,18 +79,28 @@ type CasefileReporterOptions = {
 };
 ```
 
-Mask coordinates are CSS pixels in the screenshot. For PNGs, masking changes the exported pixels; the original remains where Playwright wrote it. Unsupported image formats are omitted when masks are configured so an unmasked copy cannot leak into the casefile.
+Mask coordinates are CSS pixels in the screenshot. Masked export supports non-interlaced 8-bit RGB/RGBA PNGs.
 
 ## Develop and verify
 
+From a clean checkout:
+
 ```sh
-npm install
+npm ci
+npx playwright install chromium
 npm test
-npm run test:e2e # requires a Playwright Chromium install
+npm run typecheck
 npm run build
+npm run test:e2e
+npm run test:claims
+npm run audit:site
+npm run test:consumer
 npm pack --dry-run
+npm audit --omit=dev --audit-level=high
 ```
 
-`npm run build` creates ESM, CommonJS, declarations, and the deployable documentation/demo site at `dist/site/index.html`. `npm run dev` starts the site locally.
+`npm run audit:site` builds the site and starts its own local production preview unless `CASEFILE_AUDIT_URL` names a site to inspect. `npm run test:claims` runs every public claim in `.factory/claims.json`; each command in that manifest can also run independently.
 
-No telemetry, accounts, cookies, cloud service, or runtime CDN is used. See [CHANGELOG.md](./CHANGELOG.md), [SECURITY.md](./SECURITY.md), and the [MIT license](./LICENSE).
+`npm run build` creates ESM, CommonJS, declarations, and the deployable documentation/demo site at `dist/site/index.html`. Deploy `dist/site` as a static site. The factory owns registry publishing; use `npm pack` to prepare the package and do not publish from this checkout.
+
+See [privacy](https://flaky-test-casefile.sociobot.in/privacy/), [terms](https://flaky-test-casefile.sociobot.in/terms/), [CHANGELOG.md](./CHANGELOG.md), [SECURITY.md](./SECURITY.md), and the [MIT license](./LICENSE).

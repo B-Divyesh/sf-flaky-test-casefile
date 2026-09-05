@@ -48,6 +48,8 @@
     "build": "npm run build:lib && npm run build:site",
     "test": "vitest run --config vitest.config.ts",
     "test:e2e": "playwright test --config test/e2e/playwright.config.ts && playwright test --config test/e2e/viewer.playwright.config.ts",
+    "test:claims": "playwright test --config test/e2e/claims.playwright.config.ts",
+    "test:consumer": "node scripts/consumer-check.mjs",
     "audit:site": "node scripts/browser-audit.mjs",
     "test:watch": "vitest --config vitest.config.ts",
     "typecheck": "tsc --noEmit"
@@ -62,14 +64,11 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
-    "@playwright/test": "^1.55.0",
+    "@playwright/test": "1.58.2",
     "@types/node": "^22.10.0",
     "tsup": "^8.3.5",
     "typescript": "^5.7.2",
     "vite": "^6.0.5",
     "vitest": "^4.1.11"
-  },
-  "overrides": {
-    "esbuild": "0.25.12"
   }
 }

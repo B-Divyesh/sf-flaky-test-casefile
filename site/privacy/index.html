@@ -1,5 +1,24 @@
 <!doctype html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Flaky Test Casefile privacy details."><meta name="theme-color" content="#071b2b"><title>Privacy — Flaky Test Casefile</title><link rel="stylesheet" href="/style.css"></head>
-<body><a class="skip-link" href="#main">Skip to main content</a><header class="site-header"><a class="brand" href="/"><span aria-hidden="true">FC</span><span>Flaky Test<br>Casefile</span></a><nav aria-label="Primary navigation"><a href="/">Home</a><a href="/terms/">Terms</a></nav></header>
-<main id="main" class="legal"><p class="kicker">Local by default</p><h1>Privacy</h1><p class="effective">Effective August 27, 2026</p><h2>The package</h2><p>Flaky Test Casefile runs on your machine or CI runner. It does not transmit reports, tests, screenshots, identifiers, or usage telemetry to us. Generated reports are static local files.</p><h2>Artifact safety</h2><p>Test artifacts can contain personal data or credentials. Credential headers are redacted from probe data, traces and videos are excluded by default, and optional screenshot masks alter the copied PNG pixels. You control storage and sharing. Review any report before distributing it.</p><h2>This website</h2><p>The demo processes a selected JSON file only in browser memory. It does not upload or persist that file. The site uses no analytics, advertising, cookies, third-party fonts, or third-party scripts. Its service worker caches public site files on your device for offline access; clearing site data removes them.</p><h2>Contact</h2><p>Questions can be filed in the project’s public GitHub issue tracker. Do not include private test artifacts or credentials in an issue.</p></main>
-<footer><div class="brand"><span aria-hidden="true">FC</span><span>Flaky Test<br>Casefile</span></div><p>Open-source under MIT.</p><nav aria-label="Legal"><a href="/privacy/" aria-current="page">Privacy</a><a href="/terms/">Terms</a></nav></footer></body></html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="Privacy details for the local Flaky Test Casefile reporter and demo.">
+    <meta name="theme-color" content="#071b2b">
+    <meta property="og:title" content="Privacy — Flaky Test Casefile"><meta property="og:description" content="Privacy details for the local Flaky Test Casefile reporter and demo."><meta property="og:type" content="website"><meta property="og:url" content="https://flaky-test-casefile.sociobot.in/privacy/"><meta property="og:image" content="https://flaky-test-casefile.sociobot.in/casefile-og.webp"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Privacy — Flaky Test Casefile"><meta name="twitter:description" content="Privacy details for the local Flaky Test Casefile reporter and demo."><meta name="twitter:image" content="https://flaky-test-casefile.sociobot.in/casefile-og.webp">
+    <link rel="canonical" href="https://flaky-test-casefile.sociobot.in/privacy/"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <title>Privacy — Flaky Test Casefile</title><link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header class="site-header"><a class="brand" href="/"><span aria-hidden="true">FC</span><span>Flaky Test<br>Casefile</span></a><nav aria-label="Primary navigation"><a href="/demo/">Demo</a><a href="/#install">Install</a><a href="/privacy/" aria-current="page">Privacy</a></nav></header>
+    <main id="main" class="legal"><p class="kicker">Privacy</p><h1>Privacy for local casefiles</h1><p class="effective">Effective September 5, 2026</p>
+      <h2>The package</h2><p>Flaky Test Casefile runs on your machine or CI runner. It does not upload reports or send usage telemetry. Generated reports are static local files.</p>
+      <h2>Artifact safety</h2><p>Credential headers and sensitive query values are redacted from probe data. Traces and videos are excluded by default. Configured screenshot masks change the copied PNG pixels.</p>
+      <h2>This website and demo</h2><p>The website uses no analytics, advertising, cookies, third-party fonts, third-party scripts, or runtime CDN. A selected JSON file is processed in browser memory and is not uploaded or saved. The demo uses a separate <code>demo:</code> storage namespace. Its service worker caches public files after the first visit for offline use.</p>
+      <h2>Contact</h2><p>Questions can be filed in the project’s public GitHub issue tracker. Do not include private test artifacts or credentials in an issue.</p>
+    </main>
+    <footer><div class="brand"><span aria-hidden="true">FC</span><span>Flaky Test<br>Casefile</span></div><p>Private static casefiles for Playwright retry evidence.</p><nav aria-label="Footer"><a href="/privacy/" aria-current="page">Privacy</a><a href="/terms/">Terms</a></nav><small>Built by Param Factory<br>v0.1.0 · build repair-2</small></footer>
+  </body>
+</html>
