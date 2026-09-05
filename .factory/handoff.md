@@ -8,6 +8,7 @@ Repair complete. The product turns intermittent Playwright retries into a local 
 
 - **Implementation SHA / deployed artifact:** `18e9d3e31f02905e0eb1453d7343c1971ee5b9c5` (`fix: add demo sandbox and verified claims`).
 - **Prior documentation/review SHA:** `8e1a58eb020e71000b15d4191cc87799a5524942`. This handoff is a later documentation-only update.
+- **Documentation verification SHA:** `870fe02678a1d740d80fe3952b65069fd4548a6b` (`docs: record repair verification`).
 - **Production:** deployed `dist/site` to the existing `sf-flaky-test-casefile` Static Web App on 2026-09-05. No backend, environment, replica, or storage configuration was changed.
 - **Live parity:** `https://flaky-test-casefile.sociobot.in/demo/` exactly matched `dist/site/demo/index.html` by SHA-256 after deployment.
 
